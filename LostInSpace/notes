@@ -1,0 +1,72 @@
+check if button makes sound
+characters:
+- human
+- doggo
+- jellyfish
+
+make su
+
+
+Solar_system
+
+Choose your character:
+[[Human]]
+[[Corgi]]
+[[Panda]]
+'Halo, halo? Can anybody hear me?!'
+[[Say Hi]]
+[[Ignore]]
+Woof woof!
+[[Hi?->Say Hi]]
+[[Ignore]] 
+'Gee-gee'
+[[Hi?->Say Hi]]
+[[Ignore]] 
+"Halo? Oh what a blessing! Hello!"
+[[...]]
+'?!?!?!?!?!?!?'
+[[Continue Ignoring]]
+"That's not very nice of you... Game over.",
+
+[[Start Again->1]]
+"I am stuck in the space! And my monitor broke! I have only access to radio! Please help me!"
+[[What can I do?"]]
+"Its my first mission in the space and i made a terrible mistake! 
+I have forgotten to pack my space data log! 
+If my boss will have to call emergency aircrsdt to Help me or I will be in big trouble!"
+I need you to access the planet data and guide me through Solar System.
+[[nod]]
+"Open the computer in front of you. The password is the name of our home planet."
+[[Ok
+
+
+function renderTv(scene, key) {
+  if (key) {
+    gameState.selectedTv = key;
+  } 
+  if (gameState.tv) {
+    gameState.tv.destroy();
+  }
+  gameState.tv= scene.add.sprite(240,200,key);
+  gameState.tv.setScale(0.7);
+
+  // Create animation after assigning the sprite to gameState.tv
+  var frameNames= gameState.textures.get("tv").getFrameNames();
+  scene.anims.create({
+    key: 'mars',
+    frames: [
+      { key: 'tv',frame:"3D829513-4F73-4243-A2D6-F27C9B108172.png" }, //empty
+      { key: 'tv',frame:"D2769888-022C-4A31-88F7-5E6D65A35EC6.png" }, //info2
+      { key: 'tv',frame:"603F4D7E-EE6E-407A-8A3E-A2886F9BF850.png" }, //password 
+      { key: 'tv',frame:"3D829513-4F73-4243-A2D6-F27C9B108172.png" }, //empty
+      { key: 'tv',frame:"0114DA70-F22A-4C7B-AA77-82A73686C714.png" }, //accepted 
+      { key: 'tv',frame:"3D829513-4F73-4243-A2D6-F27C9B108172.png" }, //empty
+      { key: 'tv',frame:"B8C1F19F-F25F-4BD2-B5E8-C35569273D0B.png" }, //type
+      { key: 'tv',frame:"020B31A6-10B6-4C06-A88C-3DD22B37BD8A.png" }, //picture
+      { key: 'tv',frame:"B8AD542D-EA9D-4718-8BEB-B88D0FCB0071.png" }, //info
+      { key: 'tv',frame:"ECD96DEA-5EA1-4060-8993-B79C06F5722D.png" }, //info2
+      { key: 'tv',frame:"F2FB8BCC-B199-4A57-B147-E3B845ABDADB.png" }, //info3
+      { key: 'tv',frame:"F2FB8BCC-B199-4A57-B147-E3B845ABDADB.png" }, //info3
+      { key: 'tv',frame:"5DACE78F-B5D5-4E92-B1C4-FF371A8B5812.png" }, //error
+      { key: 'tv',frame:"5DACE78F-B5D5-4E92-B1C4-FF371A8B5812.png" }, //error
+      { key: 'tv',frame:"
