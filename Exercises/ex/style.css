@@ -1,0 +1,35 @@
+.body {
+    margin:0;
+    padding:0;
+    font-size:0;
+}
+
+
+.unit {
+    background:linear-gradient( pink, rgb(161, 239, 246), rgb(155, 155, 240));
+    width:100px;
+    height:100px;
+    display:inline-block;
+}
+
+.unit:hover {
+    background:linear-gradient(rgb(235, 241, 149),rgb(191, 247, 251),rgb(169, 230, 196));
+    border-radius:50px;
+}
+
+.pink {
+    width:100px;
+    height:100px;
+    background:linear-gradient(rgb(213, 149, 241),rgb(255, 213, 240),rgb(214, 125, 140));
+    display:inline-block;
+
+}
+
+.pink:hover {
+    background:linear-gradient(rgb(235, 241, 149),rgb(191, 247, 251),rgb(169, 230, 196));
+    border-radius:50px;
+}
+
+.clicked {
+    background-image: "cat.png";
+}
