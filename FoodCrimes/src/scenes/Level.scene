@@ -1,0 +1,93 @@
+{
+    "id": "01aefa93-6044-4159-8358-7e91310aa05f",
+    "sceneType": "SCENE",
+    "settings": {
+        "snapEnabled": true,
+        "exportClass": true,
+        "autoImport": true,
+        "importFileExtension": true,
+        "preloadPackFiles": [],
+        "createMethodName": "editorCreate",
+        "sceneKey": "Level",
+        "borderWidth": 1280,
+        "borderHeight": 720
+    },
+    "displayList": [
+        {
+            "type": "Image",
+            "id": "adb024ee-a7df-4aff-bde9-ca325cadeb93",
+            "label": "background",
+            "texture": {
+                "key": "background"
+            },
+            "x": 640,
+            "y": 352,
+            "scaleX": 0.668800598067051,
+            "scaleY": 0.6718093961757252
+        },
+        {
+            "type": "Image",
+            "id": "f5163e99-4d27-4953-b1a9-47c89b0be397",
+            "label": "asset_8",
+            "texture": {
+                "key": "Asset 8"
+            },
+            "x": 656,
+            "y": 368,
+            "scaleX": 0.8029926016704788,
+            "scaleY": 0.8029926016704788
+        },
+        {
+            "type": "Text",
+            "id": "b2b3dbd5-2106-41fa-8a04-9b511e3401a9",
+            "label": "welcome",
+            "scope": "CLASS",
+            "x": 656,
+            "y": 272,
+            "scaleX": 0.9774028217503797,
+            "originX": 0.5,
+            "originY": 0.5,
+            "text": "Food \nCrimes\n",
+            "paddingLeft": 10,
+            "paddingRight": 20,
+            "align": "center",
+            "fontFamily": "Pixelify Sans",
+            "fontSize": "85px",
+            "color": "#000000ff",
+            "shadow.offsetX": 10,
+            "shadow.offsetY": 10,
+            "shadow.fill": true,
+            "shadow.blur": 15,
+            "baselineX": 0
+        },
+        {
+            "type": "Image",
+            "id": "3ee0f2fe-9e51-484b-89bf-1025a62311d6",
+            "label": "asset_6",
+            "scope": "METHOD",
+            "texture": {
+                "key": "Asset 6"
+            },
+            "x": 144,
+            "y": 416,
+            "scaleX": 0.8588758273543489,
+            "scaleY": 0.8588758273543489
+        },
+        {
+            "type": "Image",
+            "id": "e00c1a28-9736-4be9-b73c-3fe260de2a4f",
+            "label": "dino",
+            "scope": "METHOD",
+            "texture": {},
+            "x": 320,
+            "y": 112
+        }
+    ],
+    "plainObjects": [],
+    "meta": {
+        "app": "Phaser Editor - Scene Editor",
+        "url": "https://phaser.io/editor",
+        "contentType": "phasereditor2d.core.scene.SceneContentType",
+        "version": 5
+    }
+}
