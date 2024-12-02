@@ -64,6 +64,8 @@ export default class Preload extends Phaser.Scene {
 
 		this.editorPreload();
 		this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
+		this.load.script('webfont', 'https://fonts.googleapis.com/css2?family=Zilla+Slab+Highlight:wght@400;700&display=swap');
+
 
 		const width =  this.progressBar.width;
 

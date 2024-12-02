@@ -17,6 +17,7 @@
             "type": "Image",
             "id": "adb024ee-a7df-4aff-bde9-ca325cadeb93",
             "label": "background",
+            "scope": "CLASS",
             "texture": {
                 "key": "background"
             },
@@ -28,7 +29,8 @@
         {
             "type": "Image",
             "id": "f5163e99-4d27-4953-b1a9-47c89b0be397",
-            "label": "asset_8",
+            "label": "computer",
+            "scope": "CLASS",
             "texture": {
                 "key": "Asset 8"
             },
@@ -62,25 +64,60 @@
         },
         {
             "type": "Image",
-            "id": "3ee0f2fe-9e51-484b-89bf-1025a62311d6",
-            "label": "asset_6",
-            "scope": "METHOD",
+            "id": "c13ea735-42f5-4223-930f-ec5ee2d10cfd",
+            "label": "cat",
+            "scope": "CLASS",
+            "hitArea.shape": "RECTANGLE",
+            "hitArea.width": 628,
+            "hitArea.height": 627,
             "texture": {
-                "key": "Asset 6"
+                "key": "cat"
             },
-            "x": 144,
-            "y": 416,
-            "scaleX": 0.8588758273543489,
-            "scaleY": 0.8588758273543489
+            "x": 160,
+            "y": 464,
+            "scaleX": 0.6369282006437108,
+            "scaleY": 0.6369282006437108
         },
         {
-            "type": "Image",
-            "id": "e00c1a28-9736-4be9-b73c-3fe260de2a4f",
-            "label": "dino",
-            "scope": "METHOD",
-            "texture": {},
-            "x": 320,
-            "y": 112
+            "type": "Text",
+            "id": "6ef8edae-24d8-4661-b76e-c2dbad3cbb96",
+            "label": "hint01",
+            "scope": "CLASS",
+            "x": 944,
+            "y": 128,
+            "fontFamily": "Zilla Slab Highlight",
+            "fontSize": "70px",
+            "color": "#000000ff",
+            "stroke": "#000000ff"
+        },
+        {
+            "type": "Ellipse",
+            "id": "f7ecc842-c67f-40a0-8a2e-35fedf433a33",
+            "label": "switchButton",
+            "scope": "CLASS",
+            "hitArea.shape": "RECTANGLE",
+            "hitArea.width": 128,
+            "hitArea.height": 128,
+            "x": 912,
+            "y": 512,
+            "scaleX": -0.2875161165813452,
+            "scaleY": 0.32771283458160994,
+            "lineWidth": 0,
+            "width": 128,
+            "height": 128
+        },
+        {
+            "type": "Text",
+            "id": "3efefdb5-ff3a-4191-ae92-b32cccc0c2d2",
+            "label": "hint00",
+            "scope": "CLASS",
+            "x": 128,
+            "y": 272,
+            "angle": -15,
+            "text": "New text",
+            "fontFamily": "Zilla Slab Highlight",
+            "fontSize": "20px",
+            "color": "#000000ff"
         }
     ],
     "plainObjects": [],

@@ -2,21 +2,6 @@
     "section1": {
         "files": [
             {
-                "url": "assets/1x/Asset 6.png",
-                "type": "image",
-                "key": "Asset 6"
-            },
-            {
-                "url": "assets/dino.png",
-                "key": "dino",
-                "type": "image"
-            },
-            {
-                "url": "dino.png",
-                "type": "image",
-                "key": "dino"
-            },
-            {
                 "url": "assets/PixelifySans-VariableFont_wght.ttf",
                 "format": "truetype",
                 "descriptors": {},

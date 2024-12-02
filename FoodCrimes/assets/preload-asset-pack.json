@@ -12,6 +12,11 @@
                 "key": "background"
             },
             {
+                "url": "assets/1x/cat.png",
+                "type": "image",
+                "key": "cat"
+            },
+            {
                 "url": "assets/guapen.png",
                 "type": "image",
                 "key": "guapen"
