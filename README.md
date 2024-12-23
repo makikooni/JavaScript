@@ -3,7 +3,7 @@
 # Human Boxes: <br>
 Quiz for the Graphic Design BA project regarding sustainable burials. <br>
 Live Page: [GitHub Pages](https://makikooni.github.io/JavaScript/)<br>
-Visuals: [Behance](https://www.behance.net/gallery/162375521/Human-boxes) <br> <br>
+Visuals: [Behance](https://beancutdesign.myportfolio.com/human-boxes) <br> <br>
 <img src="https://github.com/user-attachments/assets/005eb8fc-9b81-4c4e-8f7b-5e2afc6d1f2b" alt="Human Boxes Screenshot" width="500"/>
 
 <br><br>
