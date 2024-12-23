@@ -9,11 +9,15 @@ Visuals: [Behance](https://www.behance.net/gallery/162375521/Human-boxes) <br> <
 <br><br>
 
 # Lost In Space: 
-Text-based game for children regarding Solar System with usage of Phaser JS. In progress. <br>
+Text-based game for children regarding Solar System with usage of Phaser JS. Demo. <br>
 Live Page: [Glitch](https://lost-in-space-game.glitch.me/) <br> <br>
 <img src="https://github.com/user-attachments/assets/6f906da2-c07c-405c-8237-8aaccc33b7bb" alt="Lost In Space Screenshot" width="500"/>
 
 <br><br>
 
 # Metamorphosis: <br>
-Text-based game, inspired by Metamorphosis by Franz Kafka. Created with Twine. <br>
+Text-based game, inspired by Metamorphosis by Franz Kafka. Created with Twine. <br><br>
+Live Page: [Glitch](⁦https://metamorphosis-unit3cc.glitch.me⁩/) <br> <br>
+<img src="https://github.com/user-attachments/assets/e4845c85-898f-422b-9e2b-535b08f5d370" alt="Metamorphosis Screenshot" width="500"/>
+
+<br><br>
