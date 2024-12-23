@@ -22,7 +22,7 @@ Live Page: [Glitch](https://lost-in-space-game.glitch.me/) <br> <br>
 
 # Metamorphosis: <br>
 Text-based game, inspired by Metamorphosis by Franz Kafka. Created with Twine. <br>
-Live Page: [Glitch](⁦https://metamorphosis-unit3cc.glitch.me⁩/) <br> <br>
+Live Page: [Glitch](https://metamorphosis-unit3cc.glitch.me/) <br> <br>
 <img src="https://github.com/user-attachments/assets/e4845c85-898f-422b-9e2b-535b08f5d370" alt="Metamorphosis Screenshot" width="500"/>
 
 <br><br>
