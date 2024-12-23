@@ -1,4 +1,9 @@
-
+# Tech: <br>
+![Static Badge](https://img.shields.io/badge/Behance-0054F7?style=for-the-badge&logo=behance&logoColor=white) 
+![Static Badge](https://img.shields.io/badge/Glitch-2800ff?style=for-the-badge&logo=glitch&logoColor=white) 
+![Static Badge](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
+![Static Badge](https://img.shields.io/badge/PHASER-56447b?style=for-the-badge&logo={Phaser}&logoColor=white)
+![Static Badge](https://img.shields.io/badge/TWINE-1fd15a?style=for-the-badge&logo={Phaser}&logoColor=white)
 
 # Human Boxes: <br>
 Quiz for the Graphic Design BA project regarding sustainable burials. <br>
