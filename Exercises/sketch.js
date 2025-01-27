@@ -22,11 +22,18 @@ let columnHeights = Array(Math.floor(squareBounds.w / objectSize)).fill(0); // T
 
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
+
   totalObjectsNeeded = Math.floor((squareBounds.w * squareBounds.h) / objectArea);
 
-  // Dropdown menu for vegetable selection
+  // Text for "Choose product:"
+  textAlign(LEFT);
+  textSize(16);
+  fill(0);
+  text("Choose product:", 10, 30); // Adjusted y-position
+
+  // Dropdown menu for vegetable selection (moved to the right)
   let dropdown = createSelect();
-  dropdown.position(10, 10);
+  dropdown.position(120, 10); // Moved slightly to the right (from 10 to 120)
   for (let veg in vegetables) {
     dropdown.option(veg);
   }
@@ -35,6 +42,7 @@ function setup() {
     resetFallingObjects();
   });
 }
+
 
 function draw() {
   background(240);
@@ -148,18 +156,37 @@ function createFallingObject(nutrient) {
   };
 }
 
-// Display the nutrient filling status
 function showNutrientFillingStatus() {
-  let yOffset = 20;
-  for (let nutrient in vegetables[currentVegetable]) {
-    let percentage = vegetables[currentVegetable][nutrient];
+  let yOffset = 40; // Starting offset to move the bars down
+  let nutrientData = vegetables[currentVegetable];
+
+  // Loop through each nutrient to display its progress bar
+  for (let nutrient in nutrientData) {
+    let percentage = nutrientData[nutrient];
+    let color = getColorForNutrient(nutrient); // Get the color for the current nutrient
+    
     fill(200);
-    rect(10, yOffset, 100, 10);
-    fill("green");
-    rect(10, yOffset, map(percentage, 0, 100, 0, 100), 10);
-    fill(0);
+    rect(10, yOffset, 100, 10); // Background for the progress bar
+    
+    fill(color); // Fill the bar with the nutrient's color
+    rect(10, yOffset, map(percentage, 0, 100, 0, 100), 10); // Progress bar
+    
+    fill(0); // Text color
     textAlign(LEFT, CENTER);
-    text(nutrient, 120, yOffset + 5);
-    yOffset += 20;
+    text(nutrient, 120, yOffset + 5); // Display the nutrient name
+    
+    yOffset += 20; // Move down for the next bar
   }
+}
+
+// Get the color associated with each nutrient
+function getColorForNutrient(nutrient) {
+  let colors = {
+    salt: "blue",
+    fibre: "green",
+    protein: "red",
+    vitamins: "yellow",
+  };
+  
+  return colors[nutrient]; // Return the color based on nutrient
 }
