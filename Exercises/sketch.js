@@ -19,15 +19,23 @@ let objectSize = 20; // Size of the falling objects (squares)
 let totalObjectsNeeded; // Total objects needed to fill the square
 let objectArea = objectSize * objectSize; // Area of each object
 let columnHeights = Array(Math.floor(squareBounds.w / objectSize)).fill(0); // Track column heights
+let customFont; 
 
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
 
   totalObjectsNeeded = Math.floor((squareBounds.w * squareBounds.h) / objectArea);
+  customFont = loadFont('Inconsolata.ttf'); // Make sure the font file is in the correct folder
 
-  // Dropdown menu for vegetable selection (moved to the right)
+
+  // DROPDOWN MENU
+  /////////////////////////////
   let dropdown = createSelect();
-  dropdown.position(150, 80); 
+  dropdown.position(320, 80); // Center the dropdown horizontally
+  dropdown.style('font-size', '18px');
+  dropdown.style('background-color', '#f0f0f0');
+  dropdown.style('padding', '8px');
+  dropdown.style('border-radius', '5px');
   for (let veg in vegetables) {
     dropdown.option(veg);
   }
@@ -35,24 +43,32 @@ function setup() {
     currentVegetable = dropdown.value();
     resetFallingObjects();
   });
+
 }
 
 
 function draw() {
   background(255,255,239);
 
-  // Title text at the top (added to draw())
+  // TITLE AND SHADOW
+  ///////////////////////////////
   textAlign(CENTER, CENTER);
   textSize(40);
+  textFont(customFont)
+  fill(150); // Shadow color (light gray)
+  text("Nutrient Filling", canvasWidth / 2 + 2, 32); // Slightly offset to create shadow
+ 
   fill(0);
   text("Nutrient Filling", canvasWidth / 2, 30); // Display title at the top
   
-  // Change basic text size for later
+  // CHOOSE TEXT
+  ///////////////////////////////
+
   textSize(20);
   textAlign(LEFT);
-  textSize(16);
+  textSize(17);
   fill(0);
-  text("Choose product:", 10, 80); // Adjusted y-position
+  text("Choose product:", 180, 84); // Adjusted y-position
 
   // Draw the outline of the vegetable container
   drawVegetableOutline();
@@ -198,6 +214,7 @@ function createFallingObject(nutrient) {
   };
 }
 
+// Show the individual nutrient filling status bars
 function showNutrientFillingStatus() {
   let yOffset = 120; // Starting offset to move the bars down
   let nutrientData = vegetables[currentVegetable];
@@ -207,19 +224,23 @@ function showNutrientFillingStatus() {
     let percentage = nutrientData[nutrient];
     let color = getColorForNutrient(nutrient); // Get the color for the current nutrient
     
-    fill(200);
-    rect(10, yOffset, 100, 10); // Background for the progress bar
+    fill(220); // Background for the progress bar
+    stroke(0);
+    strokeWeight(2);
+    rect(10, yOffset, 100, 15, 10); // Rounded corners for the background
     
     fill(color); // Fill the bar with the nutrient's color
-    rect(10, yOffset, map(percentage, 0, 100, 0, 100), 10); // Progress bar
+    noStroke();
+    rect(10, yOffset, map(percentage, 0, 100, 0, 100), 15, 10); // Rounded progress bar
     
     fill(0); // Text color
     textAlign(LEFT, CENTER);
-    text(nutrient, 120, yOffset + 5); // Display the nutrient name
+    text(nutrient, 120, yOffset + 8); // Display the nutrient name
     
     yOffset += 20; // Move down for the next bar
   }
 }
+
 
 // Get the color associated with each nutrient
 function getColorForNutrient(nutrient) {
