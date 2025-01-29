@@ -1,18 +1,34 @@
 let dishes = {
-  "Margherita Pizza": { salt: 15, fibre: 3, protein: 8, vitamins: 15, fat: 22 },
-  "Spaghetti Bolognese": { salt: 12, fibre: 4, protein: 20, vitamins: 10, fat: 18 },
-  "Lasagna": { salt: 18, fibre: 5, protein: 25, vitamins: 12, fat: 20 },
-  "Caesar Salad": { salt: 8, fibre: 6, protein: 10, vitamins: 25, fat: 14 },
-  "Hamburger": { salt: 20, fibre: 2, protein: 25, vitamins: 10, fat: 30 },
-  "Lentil Soup": { salt: 5, fibre: 25, protein: 30, vitamins: 20, fat: 20 }, // Added Lentil Soup
-  "Vegetable Stir Fry (with tofu)": { salt: 8, fibre: 18, protein: 25, vitamins: 35, fat: 14 } // Added Vegetable Stir Fry
+  "Margherita Pizza": { salt: 0.8, fibre: 4.4, protein: 17.7, sugars: 57.3, fat: 19.8 },
+  "Spaghetti Bolognese": { salt: 0.3, fibre: 6.2, protein: 21.8, sugars: 56.1, fat: 15.6 },
+  "Lasagna": { salt: 1.48, fibre: 2.45, protein: 32.29, sugars: 32.29, fat: 31.48 },
+  "Greek Salad": { salt: 1.4, fibre: 8.2, protein: 16.4, sugars: 24.6, fat: 49.3 },
+  "Hamburger": { salt: 20.6, fibre: 3.7, protein: 25, sugars: 10, fat: 30 },
+  "Lentil Soup": { salt: 5, fibre: 25, protein: 28.1, sugars: 46.8, fat: 20.6 }, 
+  "Vegetable Stir Fry (with tofu)": { salt: 3, fibre: 13.9, protein: 13.9, sugars: 41.6, fat: 27.7 }, 
+  "Kit Kat bar": { salt: 0.08, fibre: 2, protein: 7.1, sugars: 63.2, fat: 27.5 }, 
+  "Butter croissant": { salt: 0.61, fibre: 2.3, protein: 11.5, sugars: 57.8, fat: 27.7 },
+  "Hard boiled egg": { salt: 0.62, fibre: 1.7, protein: 52.3, sugars: 1.7, fat: 43.6 } 
+ 
+
 };
+let iconSalt, iconFibre, iconProtein, iconsugars, iconFat;
+
+function preload() {
+  iconSalt = loadImage('images/salt.png');
+  iconFibre = loadImage('images/fibre.png');
+  iconProtein = loadImage('images/protein.png');
+  iconsugars = loadImage('images/sugar.png');
+  iconFat = loadImage('images/fat.png');
+}
 
 let currentDish = "Margherita Pizza"; // Default dish
 let fallingObjects = [];
-let canvasWidth = 600, canvasHeight = 1000;
+let canvasWidth = 800; // Increased width
+let canvasHeight = 800; 
+
 let squareBounds = {
-  x: canvasWidth / 2 - 150,
+  x: canvasWidth / 2, // Move it more to the right
   y: canvasHeight / 2 - 250,
   w: 300,
   h: 500,
@@ -34,7 +50,7 @@ function setup() {
   // DROPDOWN MENU
   /////////////////////////////
   let dropdown = createSelect();
-  dropdown.position(320, 80); // Center the dropdown horizontally
+  dropdown.position(350, 80); // Center the dropdown horizontally
   dropdown.style('font-size', '18px');
   dropdown.style('background-color', '#f0f0f0');
   dropdown.style('padding', '8px');
@@ -70,7 +86,7 @@ function draw() {
   textAlign(LEFT);
   textSize(17);
   fill(0);
-  text("Choose product:", 180, 84); // Adjusted y-position
+  text("Choose product:", 195, 84); // Adjusted y-position
 
   // Draw the outline of the vegetable container
   drawVegetableOutline();
@@ -87,7 +103,7 @@ function draw() {
 
 // Show the combined nutrient filling status bar
 function showCombinedNutrientStatus() {
-  let yOffset = 120 + (Object.keys(dishes[currentDish]).length * 20); // Set yOffset directly below the last individual bar
+  let yOffset = 250 + (Object.keys(dishes[currentDish]).length * 20); // Set yOffset directly below the last individual bar
   let nutrientData = dishes[currentDish];
 
   // Calculate the total sum of all nutrient values
@@ -187,11 +203,11 @@ function getRandomNutrient(nutrientData) {
 // Create a new falling object aligned to a column
 function createFallingObject(nutrient) {
   let colors = {
-    salt: "blue",
-    fibre: "green",
-    protein: "red",
-    vitamins: "yellow",
-    fat: "purple", // Added fat color
+    salt: "#A7C6ED",
+    fibre: "#A7D7A9",
+    protein: "#B79B6D",
+    sugars: "#F7C5D1",
+    fat: "#F9E076", 
   };
 
   // Select a random column
@@ -219,51 +235,67 @@ function createFallingObject(nutrient) {
 
 function showNutrientFillingStatus() {
   let yOffset = 120; // Starting offset to move the bars down
+  let xOffset = 40; // Starting position for the bars and icons to shift them to the right
   let nutrientData = dishes[currentDish];
 
   // Loop through each nutrient to display its progress bar
   for (let nutrient in nutrientData) {
-    let percentage = nutrientData[nutrient];
+    // Debugging: Log the nutrient values to understand their range
+    console.log(`Nutrient: ${nutrient}, Value: ${nutrientData[nutrient]}`);
+    
+    // Assuming 100 is the maximum value for each nutrient (you can adjust this based on expected ranges)
+    let normalizedPercentage = map(nutrientData[nutrient], 0, 100, 0, 100);
+    
+    // Ensure the percentage is bounded between 0 and 100
+    normalizedPercentage = constrain(normalizedPercentage, 0, 100);
+    
     let color = getColorForNutrient(nutrient); // Get the color for the current nutrient
+    
+    let barHeight = 20; // Adjusted height for the bars
+    let barWidth = 200; // Set the width of the progress bar
     
     fill(220); // Background for the progress bar
     stroke(0);
     strokeWeight(2);
-    rect(10, yOffset, 100, 15, 10); // Rounded corners for the background
+    rect(xOffset, yOffset, barWidth, barHeight, 10); // Rounded corners for the background of the bars
     
-    // Calculate the width for the progress bar
-    let barWidth = map(percentage, 0, 100, 0, 100); // Map percentage to a range from 0 to 100 for width
-    barWidth = constrain(barWidth, 0, 100); // Ensure the width stays within bounds (0 to 100)
+    // Map normalized percentage (0 to 100) to the progress bar width (0 to 200)
+    let progressWidth = map(normalizedPercentage, 0, 100, 0, barWidth); // Correct the width of the progress bar
     
-    // Log to check the values for fat and other nutrients
-    console.log(`${nutrient}: ${percentage}% - Width: ${barWidth}`);
-
-    // Fill the bar with the nutrient's color
-    fill(color); 
+    fill(color); // Nutrient color
     noStroke();
-    rect(10, yOffset, barWidth, 15, 10); // Draw the progress bar with the computed width
+    rect(xOffset, yOffset, progressWidth, barHeight, 10); // Draw the progress bar with dynamic width
     
+    // Add icon to the left of the progress bar
+    let icon;
+    if (nutrient === "salt") icon = iconSalt;
+    if (nutrient === "fibre") icon = iconFibre;
+    if (nutrient === "protein") icon = iconProtein;
+    if (nutrient === "sugars") icon = iconsugars;
+    if (nutrient === "fat") icon = iconFat;
+    
+    image(icon, xOffset - 40, yOffset - 5, 30, 30); // Increase icon size to 30x30 and shift to the left
+    
+  
+    // Display nutrient name to the right of the bar
     fill(0); // Text color
     textAlign(LEFT, CENTER);
-    text(nutrient, 120, yOffset + 8); // Display the nutrient name
+    text(nutrient, xOffset + barWidth + 10, yOffset + barHeight / 2); // Display the nutrient name to the right of the bar
     
-    yOffset += 20; // Move down for the next bar
+    yOffset += 40; // Move down for the next bar, adjust for larger height
   }
 }
-
-
-
 
 
 
 // Get the color associated with each nutrient
 function getColorForNutrient(nutrient) {
   let colors = {
-    salt: "blue",
-    fibre: "green",
-    protein: "red",
-    vitamins: "yellow",
-    fat: "purple", // Added fat color
+    salt: "#A7C6ED",
+    fibre: "#A7D7A9",
+    protein: "#B79B6D",
+    sugars: "#F7C5D1",
+    fat: "#F9E076", 
   };
   
   return colors[nutrient]; // Return the color based on nutrient
