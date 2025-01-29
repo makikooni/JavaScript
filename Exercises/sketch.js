@@ -15,12 +15,28 @@ let dishes = {
 let iconSalt, iconFibre, iconProtein, iconsugars, iconFat;
 let animatedPercentages = {}; // To store animated percentages for each nutrient
 
+
 function preload() {
   iconSalt = loadImage('images/salt.png');
   iconFibre = loadImage('images/fibre.png');
   iconProtein = loadImage('images/protein.png');
   iconsugars = loadImage('images/sugar.png');
   iconFat = loadImage('images/fat.png');
+  iconPizza = loadImage('images/pizza.png');
+
+  iconSalad = loadImage('images/salad.png');
+  iconBurger = loadImage('images/hamburger.png');
+  iconPasta = loadImage('images/pasta.png');
+  iconLasagna = loadImage('images/las.png');
+  iconSoup = loadImage('images/lentil.png');
+  iconStir = loadImage('images/stir.png');
+  iconKitKat = loadImage('images/kitkat.png');
+  iconCro = loadImage('images/cro.png');
+  iconEgg = loadImage('images/egg.png');
+
+
+
+
 }
 
 let currentDish = "Margherita Pizza"; // Default dish
@@ -108,8 +124,8 @@ function showCombinedNutrientStatus() {
   // Calculate the total sum of all nutrient values
   let totalNutrientValue = Object.values(nutrientData).reduce((sum, value) => sum + value, 0);
 
-  let xOffset = 10; // X position for the combined bar
-  let barWidth = 100; // Width of the combined bar
+  let xOffset = 40; // X position for the combined bar
+  let barWidth = 200; // Width of the combined bar
   let totalWidth = 0; // Total width accumulated for filling the combined bar
 
   // Loop through each nutrient and draw its portion in the combined bar
@@ -128,8 +144,53 @@ function showCombinedNutrientStatus() {
   // Display text for the combined progress bar
   fill(0);
   textAlign(LEFT, CENTER);
-  text("Combined Nutrients", 120, yOffset + 5); // Label for the combined nutrient bar
+  text("Combined Nutrients", 60, yOffset -15); // Label for the combined nutrient bar
+
+      // Add icon to the left of the progress bar
+  let icon;
+  switch (currentDish) {
+    case "Margherita Pizza":
+      icon = iconPizza;
+      break;
+    case "Spaghetti Bolognese":
+      icon = iconPasta;
+      break;
+    case "Greek Salad":
+      icon = iconSalad;
+      break;
+    case "Hamburger":
+      icon = iconBurger;
+      break;
+    case "Lasagna":
+      icon = iconLasagna;
+      break;
+    case "Lentil Soup":
+      icon = iconSoup;
+      break;
+    case "Vegetable Stir Fry (with tofu)":
+      icon = iconStir;
+      break;
+    case "Kit Kat bar":
+      icon = iconKitKat;
+      break;
+    case "Butter croissant":
+      icon = iconCro;
+      break;
+    case "Hard boiled egg":
+      icon = iconEgg;
+      break;
+    case "Hamburger":
+      icon = iconBurger;
+      break;
+    default:
+      icon = defaultIcon; // Optional: define a default icon if no match
+  }
+    tint(170); // Apply dark gray color
+    image(icon, xOffset - 170, yOffset + 100, 200, 200); // Increase icon size to 30x30 and shift to the left
+      
 }
+
+
 
 
 // Reset the falling objects when the vegetable changes
