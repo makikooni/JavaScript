@@ -255,16 +255,21 @@ function showNutrientFillingStatus() {
     let barWidth = 200; // Set the width of the progress bar
     
     fill(220); // Background for the progress bar
-    stroke(0);
+    stroke(150);
     strokeWeight(2);
-    rect(xOffset, yOffset, barWidth, barHeight, 10); // Rounded corners for the background of the bars
+    rect(xOffset, yOffset, barWidth, barHeight, 0, 10, 10, 0); // Rounded corners on the right side for the background bar
     
     // Map normalized percentage (0 to 100) to the progress bar width (0 to 200)
     let progressWidth = map(normalizedPercentage, 0, 100, 0, barWidth); // Correct the width of the progress bar
+    let rectHeight = barHeight - 2;  // Reduced height of the rectangle
+    let centralizeOffset = (barHeight - rectHeight) / 2;  // To center the rectangle within the bar
     
+    // Now, draw the colored progress bar with rounded corners only on the right side
     fill(color); // Nutrient color
     noStroke();
-    rect(xOffset, yOffset, progressWidth, barHeight, 10); // Draw the progress bar with dynamic width
+    
+    // Draw the colored progress bar with rounded corners on the right side
+    rect(xOffset + 1, yOffset + centralizeOffset, progressWidth, rectHeight, 0, 10, 10, 0); // Draw with rounded corners only on the right side
     
     // Add icon to the left of the progress bar
     let icon;
@@ -276,7 +281,6 @@ function showNutrientFillingStatus() {
     
     image(icon, xOffset - 40, yOffset - 5, 30, 30); // Increase icon size to 30x30 and shift to the left
     
-  
     // Display nutrient name to the right of the bar
     fill(0); // Text color
     textAlign(LEFT, CENTER);
@@ -285,6 +289,7 @@ function showNutrientFillingStatus() {
     yOffset += 40; // Move down for the next bar, adjust for larger height
   }
 }
+
 
 
 
