@@ -6,7 +6,7 @@ let vegetables = {
 
 let currentVegetable = "Carrot"; // Default vegetable
 let fallingObjects = [];
-let canvasWidth = 600, canvasHeight = 800;
+let canvasWidth = 600, canvasHeight = 1000;
 let squareBounds = {
   x: canvasWidth / 2 - 150,
   y: canvasHeight / 2 - 250,
@@ -25,15 +25,9 @@ function setup() {
 
   totalObjectsNeeded = Math.floor((squareBounds.w * squareBounds.h) / objectArea);
 
-  // Text for "Choose product:"
-  textAlign(LEFT);
-  textSize(16);
-  fill(0);
-  text("Choose product:", 10, 30); // Adjusted y-position
-
   // Dropdown menu for vegetable selection (moved to the right)
   let dropdown = createSelect();
-  dropdown.position(120, 10); // Moved slightly to the right (from 10 to 120)
+  dropdown.position(150, 80); 
   for (let veg in vegetables) {
     dropdown.option(veg);
   }
@@ -45,7 +39,20 @@ function setup() {
 
 
 function draw() {
-  background(240);
+  background(255,255,239);
+
+  // Title text at the top (added to draw())
+  textAlign(CENTER, CENTER);
+  textSize(40);
+  fill(0);
+  text("Nutrient Filling", canvasWidth / 2, 30); // Display title at the top
+  
+  // Change basic text size for later
+  textSize(20);
+  textAlign(LEFT);
+  textSize(16);
+  fill(0);
+  text("Choose product:", 10, 80); // Adjusted y-position
 
   // Draw the outline of the vegetable container
   drawVegetableOutline();
@@ -53,9 +60,44 @@ function draw() {
   // Handle and display falling objects
   handleFallingObjects();
 
-  // Display a nutrient filling status bar
+  // Display individual nutrient filling status bars
   showNutrientFillingStatus();
+
+  // Display the combined nutrient progress bar
+  showCombinedNutrientStatus();
 }
+
+// Show the combined nutrient filling status bar
+function showCombinedNutrientStatus() {
+  let yOffset = 120 + (Object.keys(vegetables[currentVegetable]).length * 20); // Set yOffset directly below the last individual bar
+  let nutrientData = vegetables[currentVegetable];
+
+  // Calculate the total sum of all nutrient values
+  let totalNutrientValue = Object.values(nutrientData).reduce((sum, value) => sum + value, 0);
+
+  let xOffset = 10; // X position for the combined bar
+  let barWidth = 100; // Width of the combined bar
+  let totalWidth = 0; // Total width accumulated for filling the combined bar
+
+  // Loop through each nutrient and draw its portion in the combined bar
+  for (let nutrient in nutrientData) {
+    let nutrientValue = nutrientData[nutrient];
+    let percentage = map(nutrientValue, 0, totalNutrientValue, 0, 100); // Calculate the percentage for the current nutrient
+
+    // Draw the colored segment of the combined progress bar
+    fill(getColorForNutrient(nutrient)); // Set the color for the nutrient
+    rect(xOffset, yOffset, map(percentage, 0, 100, 0, barWidth), 10); // Draw the segment
+
+    // Update xOffset for the next nutrient segment
+    xOffset += map(percentage, 0, 100, 0, barWidth); 
+  }
+
+  // Display text for the combined progress bar
+  fill(0);
+  textAlign(LEFT, CENTER);
+  text("Combined Nutrients", 120, yOffset + 5); // Label for the combined nutrient bar
+}
+
 
 // Reset the falling objects when the vegetable changes
 function resetFallingObjects() {
@@ -157,7 +199,7 @@ function createFallingObject(nutrient) {
 }
 
 function showNutrientFillingStatus() {
-  let yOffset = 40; // Starting offset to move the bars down
+  let yOffset = 120; // Starting offset to move the bars down
   let nutrientData = vegetables[currentVegetable];
 
   // Loop through each nutrient to display its progress bar
