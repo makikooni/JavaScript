@@ -13,6 +13,7 @@ let dishes = {
 
 };
 let iconSalt, iconFibre, iconProtein, iconsugars, iconFat;
+let animatedPercentages = {}; // To store animated percentages for each nutrient
 
 function preload() {
   iconSalt = loadImage('images/salt.png');
@@ -66,10 +67,9 @@ function setup() {
 
 
 function draw() {
-  background(255,255,239);
+  background(255, 255, 239);
 
   // TITLE AND SHADOW
-  ///////////////////////////////
   textAlign(CENTER, CENTER);
   textSize(40);
   textFont(customFont)
@@ -80,8 +80,6 @@ function draw() {
   text("Nutrient Filling", canvasWidth / 2, 30); // Display title at the top
   
   // CHOOSE TEXT
-  ///////////////////////////////
-
   textSize(20);
   textAlign(LEFT);
   textSize(17);
@@ -100,6 +98,7 @@ function draw() {
   // Display the combined nutrient progress bar
   showCombinedNutrientStatus();
 }
+
 
 // Show the combined nutrient filling status bar
 function showCombinedNutrientStatus() {
@@ -143,7 +142,7 @@ function resetFallingObjects() {
 
 // Draw the outline of the vegetable container
 function drawVegetableOutline() {
-  stroke(0);
+  stroke(150);
   noFill();
   rect(squareBounds.x, squareBounds.y, squareBounds.w, squareBounds.h);
 }
@@ -240,15 +239,18 @@ function showNutrientFillingStatus() {
 
   // Loop through each nutrient to display its progress bar
   for (let nutrient in nutrientData) {
-    // Debugging: Log the nutrient values to understand their range
-    console.log(`Nutrient: ${nutrient}, Value: ${nutrientData[nutrient]}`);
+    // Initialize animatedPercentages if it doesn't exist
+    if (!(nutrient in animatedPercentages)) {
+      animatedPercentages[nutrient] = 0;
+    }
+
+    // Calculate the target percentage (current value of the nutrient)
+    let targetPercentage = map(nutrientData[nutrient], 0, 100, 0, 100);
     
-    // Assuming 100 is the maximum value for each nutrient (you can adjust this based on expected ranges)
-    let normalizedPercentage = map(nutrientData[nutrient], 0, 100, 0, 100);
-    
-    // Ensure the percentage is bounded between 0 and 100
-    normalizedPercentage = constrain(normalizedPercentage, 0, 100);
-    
+    // Use lerp() to smoothly transition towards the target percentage
+    // Increase the speed of the transition by adjusting the third parameter (0.01 is a slow rate)
+    animatedPercentages[nutrient] = lerp(animatedPercentages[nutrient], targetPercentage, 0.01);
+
     let color = getColorForNutrient(nutrient); // Get the color for the current nutrient
     
     let barHeight = 20; // Adjusted height for the bars
@@ -259,8 +261,8 @@ function showNutrientFillingStatus() {
     strokeWeight(2);
     rect(xOffset, yOffset, barWidth, barHeight, 0, 10, 10, 0); // Rounded corners on the right side for the background bar
     
-    // Map normalized percentage (0 to 100) to the progress bar width (0 to 200)
-    let progressWidth = map(normalizedPercentage, 0, 100, 0, barWidth); // Correct the width of the progress bar
+    // Map the animated percentage (0 to 100) to the progress bar width (0 to 200)
+    let progressWidth = map(animatedPercentages[nutrient], 0, 100, 0, barWidth); // Use animated value for width
     let rectHeight = barHeight - 2;  // Reduced height of the rectangle
     let centralizeOffset = (barHeight - rectHeight) / 2;  // To center the rectangle within the bar
     
@@ -289,6 +291,8 @@ function showNutrientFillingStatus() {
     yOffset += 40; // Move down for the next bar, adjust for larger height
   }
 }
+
+
 
 // Get the color associated with each nutrient
 function getColorForNutrient(nutrient) {
