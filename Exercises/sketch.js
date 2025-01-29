@@ -1,10 +1,14 @@
-let vegetables = {
-  "Carrot": { salt: 10, fibre: 30, protein: 20, vitamins: 40 },
-  "Broccoli": { salt: 5, fibre: 40, protein: 25, vitamins: 30 },
-  "Tomato": { salt: 15, fibre: 20, protein: 10, vitamins: 55 },
+let dishes = {
+  "Margherita Pizza": { salt: 15, fibre: 3, protein: 8, vitamins: 15, fat: 22 },
+  "Spaghetti Bolognese": { salt: 12, fibre: 4, protein: 20, vitamins: 10, fat: 18 },
+  "Lasagna": { salt: 18, fibre: 5, protein: 25, vitamins: 12, fat: 20 },
+  "Caesar Salad": { salt: 8, fibre: 6, protein: 10, vitamins: 25, fat: 14 },
+  "Hamburger": { salt: 20, fibre: 2, protein: 25, vitamins: 10, fat: 30 },
+  "Lentil Soup": { salt: 5, fibre: 25, protein: 30, vitamins: 20, fat: 20 }, // Added Lentil Soup
+  "Vegetable Stir Fry (with tofu)": { salt: 8, fibre: 18, protein: 25, vitamins: 35, fat: 14 } // Added Vegetable Stir Fry
 };
 
-let currentVegetable = "Carrot"; // Default vegetable
+let currentDish = "Margherita Pizza"; // Default dish
 let fallingObjects = [];
 let canvasWidth = 600, canvasHeight = 1000;
 let squareBounds = {
@@ -27,7 +31,6 @@ function setup() {
   totalObjectsNeeded = Math.floor((squareBounds.w * squareBounds.h) / objectArea);
   customFont = loadFont('Inconsolata.ttf'); // Make sure the font file is in the correct folder
 
-
   // DROPDOWN MENU
   /////////////////////////////
   let dropdown = createSelect();
@@ -36,14 +39,13 @@ function setup() {
   dropdown.style('background-color', '#f0f0f0');
   dropdown.style('padding', '8px');
   dropdown.style('border-radius', '5px');
-  for (let veg in vegetables) {
-    dropdown.option(veg);
+  for (let dish in dishes) {
+    dropdown.option(dish);
   }
   dropdown.changed(() => {
-    currentVegetable = dropdown.value();
+    currentDish = dropdown.value();
     resetFallingObjects();
   });
-
 }
 
 
@@ -85,8 +87,8 @@ function draw() {
 
 // Show the combined nutrient filling status bar
 function showCombinedNutrientStatus() {
-  let yOffset = 120 + (Object.keys(vegetables[currentVegetable]).length * 20); // Set yOffset directly below the last individual bar
-  let nutrientData = vegetables[currentVegetable];
+  let yOffset = 120 + (Object.keys(dishes[currentDish]).length * 20); // Set yOffset directly below the last individual bar
+  let nutrientData = dishes[currentDish];
 
   // Calculate the total sum of all nutrient values
   let totalNutrientValue = Object.values(nutrientData).reduce((sum, value) => sum + value, 0);
@@ -132,7 +134,7 @@ function drawVegetableOutline() {
 
 // Handle the falling objects
 function handleFallingObjects() {
-  let nutrientData = vegetables[currentVegetable];
+  let nutrientData = dishes[currentDish];
 
   // Generate new objects if the square is not filled
   if (fallingObjects.length < totalObjectsNeeded && totalAreaFilled < squareBounds.w * squareBounds.h) {
@@ -189,6 +191,7 @@ function createFallingObject(nutrient) {
     fibre: "green",
     protein: "red",
     vitamins: "yellow",
+    fat: "purple", // Added fat color
   };
 
   // Select a random column
@@ -214,10 +217,9 @@ function createFallingObject(nutrient) {
   };
 }
 
-// Show the individual nutrient filling status bars
 function showNutrientFillingStatus() {
   let yOffset = 120; // Starting offset to move the bars down
-  let nutrientData = vegetables[currentVegetable];
+  let nutrientData = dishes[currentDish];
 
   // Loop through each nutrient to display its progress bar
   for (let nutrient in nutrientData) {
@@ -229,9 +231,17 @@ function showNutrientFillingStatus() {
     strokeWeight(2);
     rect(10, yOffset, 100, 15, 10); // Rounded corners for the background
     
-    fill(color); // Fill the bar with the nutrient's color
+    // Calculate the width for the progress bar
+    let barWidth = map(percentage, 0, 100, 0, 100); // Map percentage to a range from 0 to 100 for width
+    barWidth = constrain(barWidth, 0, 100); // Ensure the width stays within bounds (0 to 100)
+    
+    // Log to check the values for fat and other nutrients
+    console.log(`${nutrient}: ${percentage}% - Width: ${barWidth}`);
+
+    // Fill the bar with the nutrient's color
+    fill(color); 
     noStroke();
-    rect(10, yOffset, map(percentage, 0, 100, 0, 100), 15, 10); // Rounded progress bar
+    rect(10, yOffset, barWidth, 15, 10); // Draw the progress bar with the computed width
     
     fill(0); // Text color
     textAlign(LEFT, CENTER);
@@ -242,6 +252,10 @@ function showNutrientFillingStatus() {
 }
 
 
+
+
+
+
 // Get the color associated with each nutrient
 function getColorForNutrient(nutrient) {
   let colors = {
@@ -249,6 +263,7 @@ function getColorForNutrient(nutrient) {
     fibre: "green",
     protein: "red",
     vitamins: "yellow",
+    fat: "purple", // Added fat color
   };
   
   return colors[nutrient]; // Return the color based on nutrient
