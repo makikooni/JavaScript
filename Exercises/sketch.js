@@ -290,9 +290,6 @@ function showNutrientFillingStatus() {
   }
 }
 
-
-
-
 // Get the color associated with each nutrient
 function getColorForNutrient(nutrient) {
   let colors = {
