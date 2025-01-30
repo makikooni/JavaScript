@@ -9,248 +9,285 @@ let dishes = {
   "Kit Kat bar": { salt: 0.08, fibre: 2, protein: 7.1, sugars: 63.2, fat: 27.5 }, 
   "Butter croissant": { salt: 0.61, fibre: 2.3, protein: 11.5, sugars: 57.8, fat: 27.7 },
   "Hard boiled egg": { salt: 0.62, fibre: 1.7, protein: 52.3, sugars: 1.7, fat: 43.6 } 
- 
-
 };
-let iconSalt, iconFibre, iconProtein, iconsugars, iconFat;
-let animatedPercentages = {}; // To store animated percentages for each nutrient
 
+let icons = {};
+let currentDishes = ["Margherita Pizza", "Margherita Pizza"];
+let fallingObjects = [[], []];
+let animatedPercentages = [{}, {}];
+let canvasWidth = 1600;
+let canvasHeight = 800;
+
+let containers = [
+  { // Left panel
+    x: 70,
+    y: 150,
+    dropdownX: 260,
+    nutrientX: 70,
+    animationX: 370
+  },
+  { // Right panel
+    x: 750,
+    y: 150,
+    dropdownX: 940,
+    nutrientX: 750,
+    animationX: 1050
+  }
+];
+
+let objectSize = 20;
+let columnHeights = [Array(15).fill(0), Array(15).fill(0)];
+let totalAreaFilled = [0, 0];
+let customFont;
+
+const dishIcons = {
+  "Margherita Pizza": "pizza",
+  "Spaghetti Bolognese": "pasta",
+  "Greek Salad": "salad",
+  "Hamburger": "hamburger",
+  "Lasagna": "las",
+  "Lentil Soup": "lentil",
+  "Vegetable Stir Fry (with tofu)": "stir",
+  "Kit Kat bar": "kitkat",
+  "Butter croissant": "cro",
+  "Hard boiled egg": "egg"
+};
 
 function preload() {
-  iconSalt = loadImage('images/salt.png');
-  iconFibre = loadImage('images/fibre.png');
-  iconProtein = loadImage('images/protein.png');
-  iconsugars = loadImage('images/sugar.png');
-  iconFat = loadImage('images/fat.png');
-  iconPizza = loadImage('images/pizza.png');
+  // Load nutrient icons
+  icons.salt = loadImage('images/salt.png');
+  icons.fibre = loadImage('images/fibre.png');
+  icons.protein = loadImage('images/protein.png');
+  icons.sugars = loadImage('images/sugar.png');
+  icons.fat = loadImage('images/fat.png');
+  
+  // Load dish icons
+  icons.pizza = loadImage('images/pizza.png');
+  icons.pasta = loadImage('images/pasta.png');
+  icons.salad = loadImage('images/salad.png');
+  icons.hamburger = loadImage('images/hamburger.png');
+  icons.las = loadImage('images/las.png');
+  icons.lentil = loadImage('images/lentil.png');
+  icons.stir = loadImage('images/stir.png');
+  icons.kitkat = loadImage('images/kitkat.png');
+  icons.cro = loadImage('images/cro.png');
+  icons.egg = loadImage('images/egg.png');
 
-  iconSalad = loadImage('images/salad.png');
-  iconBurger = loadImage('images/hamburger.png');
-  iconPasta = loadImage('images/pasta.png');
-  iconLasagna = loadImage('images/las.png');
-  iconSoup = loadImage('images/lentil.png');
-  iconStir = loadImage('images/stir.png');
-  iconKitKat = loadImage('images/kitkat.png');
-  iconCro = loadImage('images/cro.png');
-  iconEgg = loadImage('images/egg.png');
-
-
-
-
+  customFont = loadFont('Inconsolata.ttf');
 }
-
-let currentDish = "Margherita Pizza"; // Default dish
-let fallingObjects = [];
-let canvasWidth = 800; // Increased width
-let canvasHeight = 800; 
-
-let squareBounds = {
-  x: canvasWidth / 2, // Move it more to the right
-  y: canvasHeight / 2 - 250,
-  w: 300,
-  h: 500,
-};
-
-let totalAreaFilled = 0; // Tracks the total area filled in the square
-let objectSize = 20; // Size of the falling objects (squares)
-let totalObjectsNeeded; // Total objects needed to fill the square
-let objectArea = objectSize * objectSize; // Area of each object
-let columnHeights = Array(Math.floor(squareBounds.w / objectSize)).fill(0); // Track column heights
-let customFont; 
 
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
-
-  totalObjectsNeeded = Math.floor((squareBounds.w * squareBounds.h) / objectArea);
-  customFont = loadFont('Inconsolata.ttf'); // Make sure the font file is in the correct folder
-
-  // DROPDOWN MENU
-  /////////////////////////////
-  let dropdown = createSelect();
-  dropdown.position(350, 80); // Center the dropdown horizontally
-  dropdown.style('font-size', '18px');
-  dropdown.style('background-color', '#f0f0f0');
-  dropdown.style('padding', '8px');
-  dropdown.style('border-radius', '5px');
-  for (let dish in dishes) {
-    dropdown.option(dish);
-  }
-  dropdown.changed(() => {
-    currentDish = dropdown.value();
-    resetFallingObjects();
+  
+  containers.forEach((container, index) => {
+    let dropdown = createSelect();
+    dropdown.position(container.dropdownX, 80);
+    dropdown.style('font-size', '18px');
+    dropdown.style('background-color', '#f0f0f0');
+    for (let dish in dishes) dropdown.option(dish);
+    dropdown.changed(() => updateDish(index, dropdown.value()));
   });
 }
 
+function updateDish(index, dish) {
+  currentDishes[index] = dish;
+  fallingObjects[index] = [];
+  totalAreaFilled[index] = 0;
+  columnHeights[index].fill(0);
+  loop();
+}
 
 function draw() {
   background(255, 255, 239);
 
-  // TITLE AND SHADOW
-  textAlign(CENTER, CENTER);
-  textSize(40);
-  textFont(customFont)
-  fill(150); // Shadow color (light gray)
-  text("Nutrient Filling", canvasWidth / 2 + 2, 32); // Slightly offset to create shadow
- 
-  fill(0);
-  text("Nutrient Filling", canvasWidth / 2, 30); // Display title at the top
-  
-  // CHOOSE TEXT
-  textSize(20);
-  textAlign(LEFT);
+   // Title
+   textFont(customFont);
+   textAlign(CENTER  , CENTER);
+   textSize(40);
+   fill(150);
+   text("Nutrient Filling", canvasWidth/2 - 110 + 2, 32);  // Shadow
+   fill(0);
+   text("Nutrient Filling", canvasWidth/2 - 110, 30);      // Main text
+   textSize(17);
+   textAlign(LEFT);
+
+  containers.forEach((container, index) => {
+    drawContainer(container, index);
+  });
+}
+
+function drawContainer(container, index) {
+  // Left side: Nutrient information
+  push();
+  translate(container.nutrientX, container.y);
+  drawNutrientInfo(index);
+  pop();
+
+  // Right side: Animation
+  push();
+  translate(container.animationX, container.y);
+  drawAnimationContainer(index);
+  pop();
+
+
+
+  // "Choose product" text
   textSize(17);
+  textAlign(LEFT);
   fill(0);
-  text("Choose product:", 195, 84); // Adjusted y-position
-
-  // Draw the outline of the vegetable container
-  drawVegetableOutline();
-
-  // Handle and display falling objects
-  handleFallingObjects();
-
-  // Display individual nutrient filling status bars
-  showNutrientFillingStatus();
-
-  // Display the combined nutrient progress bar
-  showCombinedNutrientStatus();
+  text("Choose product:", container.x + 50, 90);
 }
 
-
-// Show the combined nutrient filling status bar
-function showCombinedNutrientStatus() {
-  let yOffset = 250 + (Object.keys(dishes[currentDish]).length * 20); // Set yOffset directly below the last individual bar
-  let nutrientData = dishes[currentDish];
-
-  // Calculate the total sum of all nutrient values
-  let totalNutrientValue = Object.values(nutrientData).reduce((sum, value) => sum + value, 0);
-
-  let xOffset = 40; // X position for the combined bar
-  let barWidth = 200; // Width of the combined bar
-  let totalWidth = 0; // Total width accumulated for filling the combined bar
-
-  // Loop through each nutrient and draw its portion in the combined bar
+function drawNutrientInfo(index) {
+  // Nutrient bars
+  let yOffset = 0;
+  let nutrientData = dishes[currentDishes[index]];
+  
   for (let nutrient in nutrientData) {
-    let nutrientValue = nutrientData[nutrient];
-    let percentage = map(nutrientValue, 0, totalNutrientValue, 0, 100); // Calculate the percentage for the current nutrient
-
-    // Draw the colored segment of the combined progress bar
-    fill(getColorForNutrient(nutrient)); // Set the color for the nutrient
-    rect(xOffset, yOffset, map(percentage, 0, 100, 0, barWidth), 10); // Draw the segment
-
-    // Update xOffset for the next nutrient segment
-    xOffset += map(percentage, 0, 100, 0, barWidth); 
+    if (!animatedPercentages[index][nutrient]) {
+      animatedPercentages[index][nutrient] = 0;
+    }
+    
+    let target = map(nutrientData[nutrient], 0, 100, 0, 100);
+    animatedPercentages[index][nutrient] = lerp(animatedPercentages[index][nutrient], target, 0.01);
+    
+    // Bar background
+    fill(220);
+    stroke(150);
+    rect(0, yOffset, 200, 20, 0, 10, 10, 0);
+    
+    // Progress
+    fill(getColor(nutrient));
+    noStroke();
+    rect(1, yOffset + 1, map(animatedPercentages[index][nutrient], 0, 100, 0, 200), 18, 0, 10, 10, 0);
+    
+    // Icon
+    image(icons[nutrient], -40, yOffset - 5, 30, 30);
+    
+    // Label
+    fill(0);
+    text(nutrient, 210, yOffset + 10);
+    yOffset += 40;
   }
 
-  // Display text for the combined progress bar
-  fill(0);
-  textAlign(LEFT, CENTER);
-  text("Combined Nutrients", 60, yOffset -15); // Label for the combined nutrient bar
-
-      // Add icon to the left of the progress bar
-  let icon;
-  switch (currentDish) {
-    case "Margherita Pizza":
-      icon = iconPizza;
-      break;
-    case "Spaghetti Bolognese":
-      icon = iconPasta;
-      break;
-    case "Greek Salad":
-      icon = iconSalad;
-      break;
-    case "Hamburger":
-      icon = iconBurger;
-      break;
-    case "Lasagna":
-      icon = iconLasagna;
-      break;
-    case "Lentil Soup":
-      icon = iconSoup;
-      break;
-    case "Vegetable Stir Fry (with tofu)":
-      icon = iconStir;
-      break;
-    case "Kit Kat bar":
-      icon = iconKitKat;
-      break;
-    case "Butter croissant":
-      icon = iconCro;
-      break;
-    case "Hard boiled egg":
-      icon = iconEgg;
-      break;
-    case "Hamburger":
-      icon = iconBurger;
-      break;
-    default:
-      icon = defaultIcon; // Optional: define a default icon if no match
+  // Combined bar
+  let total = Object.values(nutrientData).reduce((a, b) => a + b, 0);
+  yOffset += 20;
+  let currentX = 0;
+  
+  for (let nutrient in nutrientData) {
+    let width = map(nutrientData[nutrient], 0, total, 0, 200);
+    fill(getColor(nutrient));
+    rect(currentX, yOffset, width, 10);
+    currentX += width;
   }
-    tint(170); // Apply dark gray color
-    image(icon, xOffset - 170, yOffset + 100, 200, 200); // Increase icon size to 30x30 and shift to the left
-      
+  
+  // Dish icon
+  const iconName = dishIcons[currentDishes[index]];
+  if (iconName && icons[iconName]) {
+    tint(170);
+    image(icons[iconName], 0, yOffset + 50, 200, 200);
+    noTint();
+  }
 }
 
 
-
-
-// Reset the falling objects when the vegetable changes
-function resetFallingObjects() {
-  fallingObjects = [];
-  totalAreaFilled = 0;
-  columnHeights.fill(0); // Reset column heights
-  loop(); // Restart the draw loop
-}
-
-// Draw the outline of the vegetable container
-function drawVegetableOutline() {
+function drawAnimationContainer(index) {
+  // Container outline (keep the stroke for the container only)
   stroke(150);
   noFill();
-  rect(squareBounds.x, squareBounds.y, squareBounds.w, squareBounds.h);
+  rect(0, 0, 300, 500);
+
+  // Falling objects
+  handleFallingObjects(index);
+  drawFallingObjects(index);
 }
 
-// Handle the falling objects
-function handleFallingObjects() {
-  let nutrientData = dishes[currentDish];
+function drawAnimationContainer(index) {
+  // Container outline (keep the stroke for the container only)
+  stroke(150);
+  noFill();
+  rect(0, 0, 300, 500);
 
-  // Generate new objects if the square is not filled
-  if (fallingObjects.length < totalObjectsNeeded && totalAreaFilled < squareBounds.w * squareBounds.h) {
+  // Falling objects
+  handleFallingObjects(index);
+  drawFallingObjects(index);
+}
+
+function handleFallingObjects(index) {
+  let nutrientData = dishes[currentDishes[index]];
+  if (fallingObjects[index].length < 375 && totalAreaFilled[index] < 150000) {
     let nutrient = getRandomNutrient(nutrientData);
-    let newObject = createFallingObject(nutrient);
-    if (newObject) {
-      fallingObjects.push(newObject);
+    let newObj = createFallingObject(index, nutrient);
+    if (newObj) fallingObjects[index].push(newObj);
+  }
+}
+
+function createFallingObject(index, nutrient) {
+  let colors = {
+    salt: "#A7C6ED", fibre: "#A7D7A9", protein: "#B79B6D",
+    sugars: "#F7C5D1", fat: "#F9E076"
+  };
+  
+  let columnIndex = floor(random(15));
+  
+  // Count how many falling objects are in this column and not landed
+  let countFalling = 0;
+  for (let obj of fallingObjects[index]) {
+    if (!obj.landed && floor(obj.x / 20) === columnIndex) {
+      countFalling++;
     }
   }
+  
+  // Check if adding this object would exceed column height
+  if (columnHeights[index][columnIndex] + (countFalling * 20) + 20 > 500) {
+    return null;
+  }
+  
+  return {
+    x: columnIndex * 20,
+    y: -20, // Start above the container
+    size: 20,
+    speed: random(2, 5),
+    color: colors[nutrient],
+    landed: false
+  };
+}
 
-  // Update and draw falling objects
-  for (let obj of fallingObjects) {
+function drawFallingObjects(index) {
+  noStroke(); // Remove stroke for falling squares
+  fallingObjects[index].forEach(obj => {
     if (!obj.landed) {
-      obj.y += obj.speed; // Move the object down
-
-      // Check if the object has reached its landing position
-      let columnIndex = Math.floor((obj.x - squareBounds.x) / objectSize);
-      let maxY = squareBounds.y + squareBounds.h - columnHeights[columnIndex] - obj.size;
-
+      obj.y += obj.speed;
+      let columnIndex = floor(obj.x / 20);
+      let maxY = 500 - columnHeights[index][columnIndex] - 20;
+      
       if (obj.y >= maxY) {
         obj.y = maxY;
         obj.landed = true;
-        columnHeights[columnIndex] += obj.size; // Update column height
-        totalAreaFilled += objectArea; // Increment the total area filled
+        columnHeights[index][columnIndex] += 20;
+        totalAreaFilled[index] += 400;
       }
     }
-
-    // Draw the object
     fill(obj.color);
-    noStroke();
-    rect(obj.x, obj.y, obj.size, obj.size);
-  }
+    rect(obj.x, obj.y, 20, 20);
+  });
 
-  // Stop the draw loop when the square is fully filled
-  if (totalAreaFilled >= squareBounds.w * squareBounds.h) {
-    noLoop();
+  // Ensure no squares exceed the container height
+  for (let i = 0; i < columnHeights[index].length; i++) {
+    if (columnHeights[index][i] > 500) {
+      columnHeights[index][i] = 500; // Cap the height at the container's height
+    }
   }
 }
+function getColor(nutrient) {
+  const colors = {
+    salt: "#A7C6ED", fibre: "#A7D7A9", protein: "#B79B6D",
+    sugars: "#F7C5D1", fat: "#F9E076"
+  };
+  return colors[nutrient];
+}
 
-// Get a random nutrient based on their relative weights
 function getRandomNutrient(nutrientData) {
   let total = Object.values(nutrientData).reduce((a, b) => a + b, 0);
   let randomValue = random(total);
@@ -258,112 +295,4 @@ function getRandomNutrient(nutrientData) {
     randomValue -= nutrientData[key];
     if (randomValue <= 0) return key;
   }
-}
-
-// Create a new falling object aligned to a column
-function createFallingObject(nutrient) {
-  let colors = {
-    salt: "#A7C6ED",
-    fibre: "#A7D7A9",
-    protein: "#B79B6D",
-    sugars: "#F7C5D1",
-    fat: "#F9E076", 
-  };
-
-  // Select a random column
-  let columnIndex = Math.floor(random(columnHeights.length));
-  let xPos = squareBounds.x + columnIndex * objectSize;
-
-  // Check if the column is full
-  if (columnHeights[columnIndex] + objectSize > squareBounds.h) {
-    return null; // Reject object if the column is full
-  }
-
-  // Set the initial y position to the current column height
-  let yPos = squareBounds.y + columnHeights[columnIndex];
-
-  // Spawn object at the top of the column
-  return {
-    x: xPos,
-    y: yPos, // Set the y position relative to the column height
-    size: objectSize,
-    speed: random(2, 5), // Falling speed
-    color: colors[nutrient],
-    landed: false,
-  };
-}
-
-function showNutrientFillingStatus() {
-  let yOffset = 120; // Starting offset to move the bars down
-  let xOffset = 40; // Starting position for the bars and icons to shift them to the right
-  let nutrientData = dishes[currentDish];
-
-  // Loop through each nutrient to display its progress bar
-  for (let nutrient in nutrientData) {
-    // Initialize animatedPercentages if it doesn't exist
-    if (!(nutrient in animatedPercentages)) {
-      animatedPercentages[nutrient] = 0;
-    }
-
-    // Calculate the target percentage (current value of the nutrient)
-    let targetPercentage = map(nutrientData[nutrient], 0, 100, 0, 100);
-    
-    // Use lerp() to smoothly transition towards the target percentage
-    // Increase the speed of the transition by adjusting the third parameter (0.01 is a slow rate)
-    animatedPercentages[nutrient] = lerp(animatedPercentages[nutrient], targetPercentage, 0.01);
-
-    let color = getColorForNutrient(nutrient); // Get the color for the current nutrient
-    
-    let barHeight = 20; // Adjusted height for the bars
-    let barWidth = 200; // Set the width of the progress bar
-    
-    fill(220); // Background for the progress bar
-    stroke(150);
-    strokeWeight(2);
-    rect(xOffset, yOffset, barWidth, barHeight, 0, 10, 10, 0); // Rounded corners on the right side for the background bar
-    
-    // Map the animated percentage (0 to 100) to the progress bar width (0 to 200)
-    let progressWidth = map(animatedPercentages[nutrient], 0, 100, 0, barWidth); // Use animated value for width
-    let rectHeight = barHeight - 2;  // Reduced height of the rectangle
-    let centralizeOffset = (barHeight - rectHeight) / 2;  // To center the rectangle within the bar
-    
-    // Now, draw the colored progress bar with rounded corners only on the right side
-    fill(color); // Nutrient color
-    noStroke();
-    
-    // Draw the colored progress bar with rounded corners on the right side
-    rect(xOffset + 1, yOffset + centralizeOffset, progressWidth, rectHeight, 0, 10, 10, 0); // Draw with rounded corners only on the right side
-    
-    // Add icon to the left of the progress bar
-    let icon;
-    if (nutrient === "salt") icon = iconSalt;
-    if (nutrient === "fibre") icon = iconFibre;
-    if (nutrient === "protein") icon = iconProtein;
-    if (nutrient === "sugars") icon = iconsugars;
-    if (nutrient === "fat") icon = iconFat;
-    
-    image(icon, xOffset - 40, yOffset - 5, 30, 30); // Increase icon size to 30x30 and shift to the left
-    
-    // Display nutrient name to the right of the bar
-    fill(0); // Text color
-    textAlign(LEFT, CENTER);
-    text(nutrient, xOffset + barWidth + 10, yOffset + barHeight / 2); // Display the nutrient name to the right of the bar
-    
-    yOffset += 40; // Move down for the next bar, adjust for larger height
-  }
-}
-
-
-
-// Get the color associated with each nutrient
-function getColorForNutrient(nutrient) {
-  let colors = {
-    salt: "#A7C6ED",
-    fibre: "#A7D7A9",
-    protein: "#B79B6D",
-    sugars: "#F7C5D1",
-    fat: "#F9E076", 
-  };
-  
-  return colors[nutrient]; // Return the color based on nutrient
 }
