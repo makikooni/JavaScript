@@ -80,12 +80,20 @@ function setup() {
   createCanvas(canvasWidth, canvasHeight);
   
   containers.forEach((container, index) => {
+    // Create dropdown
     let dropdown = createSelect();
     dropdown.position(container.dropdownX, 80);
     dropdown.style('font-size', '18px');
     dropdown.style('background-color', '#f0f0f0');
     for (let dish in dishes) dropdown.option(dish);
     dropdown.changed(() => updateDish(index, dropdown.value()));
+    
+    // Create download button
+    let btn = createButton('Download');
+    btn.position(container.animationX + 100, container.y + 510); // Centered under animation container
+    btn.style('font-size', '16px');
+    btn.style('padding', '5px 10px');
+    btn.mousePressed(() => downloadImage(index));
   });
 }
 
@@ -115,6 +123,18 @@ function draw() {
     drawContainer(container, index);
   });
 }
+
+function downloadImage(index) {
+  let container = containers[index];
+  let x = container.animationX;
+  let y = container.y;
+  let w = 300;
+  let h = 500;
+  let img = get(x, y, w, h);
+  let dishName = currentDishes[index].replace(/ /g, '_'); // Sanitize filename
+  img.save(`${dishName}_nutrition`, 'png');
+}
+
 
 function drawContainer(container, index) {
   // Left side: Nutrient information
