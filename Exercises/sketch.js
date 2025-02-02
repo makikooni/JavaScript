@@ -88,12 +88,21 @@ function setup() {
     for (let dish in dishes) dropdown.option(dish);
     dropdown.changed(() => updateDish(index, dropdown.value()));
     
-    // Create download button
-    let btn = createButton('Download');
-    btn.position(container.animationX + 100, container.y + 510); // Centered under animation container
-    btn.style('font-size', '16px');
-    btn.style('padding', '5px 10px');
-    btn.mousePressed(() => downloadImage(index)); 
+       // Create download image button (for nutrition image)
+       let btnNutrition = createButton('Download Sticker');
+       btnNutrition.position(container.animationX + 70, container.y + 510); // Centered under animation container
+       btnNutrition.style('font-size', '16px');
+       btnNutrition.style('padding', '5px 10px');
+       btnNutrition.mousePressed(() => downloadImage(index)); 
+   
+       // Create download pattern button (for the pattern)
+       let btnPattern = createButton('Download Pattern');
+       btnPattern.position(container.animationX + 70, container.y + 550); // Below the nutrition button
+       btnPattern.style('font-size', '16px');
+       btnPattern.style('padding', '5px 10px');
+       btnPattern.mousePressed(() => downloadPattern(index));
+
+
   });
 }
 
@@ -141,6 +150,7 @@ function downloadImage(index) {
 
   // Draw title
   imgBuffer.fill(0);
+  imgBuffer.noStroke(); // Remove gray outline
   imgBuffer.textSize(24);
   imgBuffer.textAlign(CENTER, TOP);
   imgBuffer.text(currentDishes[index], w / 2 + 20, h + 30);
@@ -148,17 +158,25 @@ function downloadImage(index) {
   // Draw nutrient info
   let yOffset = h + 70;
   let nutrientData = dishes[currentDishes[index]];
-  
+
   for (let nutrient in nutrientData) {
+    let value = nutrientData[nutrient].toFixed(1);
+    let barWidth = map(value, 0, 100, 0, 150);
+    let barHeight = 16; // Slightly taller for a bubble effect
+
+    // Draw text
     imgBuffer.fill(0);
+    imgBuffer.noStroke(); // Remove any text outline
     imgBuffer.textSize(14);
     imgBuffer.textAlign(LEFT, TOP);
-    imgBuffer.text(`${nutrient}: ${nutrientData[nutrient].toFixed(1)}%`, 30, yOffset);
+    imgBuffer.text(`${nutrient}: ${value}%`, 30, yOffset);
 
+    // Draw bubble-like nutrient bar
     imgBuffer.fill(getColor(nutrient));
-    imgBuffer.rect(150, yOffset, map(nutrientData[nutrient], 0, 100, 0, 150), 10);
+    imgBuffer.noStroke(); // Remove unwanted outlines
+    imgBuffer.rect(150, yOffset, barWidth, barHeight, barHeight / 2); // Rounded pill shape
 
-    yOffset += 20;
+    yOffset += 24; // Adjust spacing
   }
 
   // Save image correctly
@@ -166,7 +184,16 @@ function downloadImage(index) {
   save(imgBuffer, `${dishName}_nutrition.png`);
 }
 
-
+function downloadPattern(index) {
+  let container = containers[index];
+  let x = container.animationX;
+  let y = container.y;
+  let w = 300;
+  let h = 500;
+  let img = get(x, y, w, h);
+  let dishName = currentDishes[index].replace(/ /g, '_'); // Sanitize filename
+  img.save(`${dishName}_nutrition`, 'png');
+}
 
 function drawContainer(container, index) {
   // Left side: Nutrient information
@@ -368,3 +395,4 @@ function getRandomNutrient(nutrientData) {
     if (randomValue <= 0) return key;
   }
 }
+
