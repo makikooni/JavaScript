@@ -94,6 +94,8 @@ function setup() {
     btn.style('font-size', '16px');
     btn.style('padding', '5px 10px');
     btn.mousePressed(() => downloadImage(index));
+
+  
   });
 }
 
@@ -107,21 +109,21 @@ function updateDish(index, dish) {
 
 function draw() {
   background(255, 255, 239);
-
    // Title
    textFont(customFont);
    textAlign(CENTER  , CENTER);
    textSize(40);
    fill(150);
-   text("Nutrient Filling", canvasWidth/2 - 110 + 2, 32);  // Shadow
+   text("Nutrient Comparing Tool", canvasWidth/2 - 60 + 2, 32);  // Shadow
    fill(0);
-   text("Nutrient Filling", canvasWidth/2 - 110, 30);      // Main text
+   text("Nutrient Comparing Tool", canvasWidth/2 - 60, 30);      // Main text
    textSize(17);
    textAlign(LEFT);
 
   containers.forEach((container, index) => {
     drawContainer(container, index);
   });
+  
 }
 
 function downloadImage(index) {
@@ -209,6 +211,7 @@ function drawNutrientInfo(index) {
     image(icons[iconName], 0, yOffset + 50, 200, 200);
     noTint();
   }
+  
 }
 
 
@@ -233,6 +236,7 @@ function drawAnimationContainer(index) {
   handleFallingObjects(index);
   drawFallingObjects(index);
 }
+
 
 function handleFallingObjects(index) {
   let nutrientData = dishes[currentDishes[index]];
@@ -300,12 +304,30 @@ function drawFallingObjects(index) {
     }
   }
 }
+/*
 function getColor(nutrient) {
   const colors = {
     salt: "#A7C6ED", fibre: "#A7D7A9", protein: "#B79B6D",
     sugars: "#F7C5D1", fat: "#F9E076"
   };
   return colors[nutrient];
+}
+*/
+function getColor(nutrient) {
+  const colors = {
+    salt: { r: 167, g: 198, b: 237 },
+    fibre: { r: 167, g: 215, b: 169 },
+    protein: { r: 183, g: 155, b: 109 },
+    sugars: { r: 247, g: 197, b: 209 },
+    fat: { r: 249, g: 224, b: 118 }
+  };
+  
+  let pulse = sin(frameCount * 0.02) * 10;
+  return color(
+    colors[nutrient].r + pulse,
+    colors[nutrient].g + pulse,
+    colors[nutrient].b + pulse
+  );
 }
 
 function getRandomNutrient(nutrientData) {
