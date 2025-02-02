@@ -93,9 +93,7 @@ function setup() {
     btn.position(container.animationX + 100, container.y + 510); // Centered under animation container
     btn.style('font-size', '16px');
     btn.style('padding', '5px 10px');
-    btn.mousePressed(() => downloadImage(index));
-
-  
+    btn.mousePressed(() => downloadImage(index)); 
   });
 }
 
@@ -127,15 +125,47 @@ function draw() {
 }
 
 function downloadImage(index) {
-  let container = containers[index];
-  let x = container.animationX;
-  let y = container.y;
-  let w = 300;
-  let h = 500;
-  let img = get(x, y, w, h);
-  let dishName = currentDishes[index].replace(/ /g, '_'); // Sanitize filename
-  img.save(`${dishName}_nutrition`, 'png');
+  const container = containers[index];
+  const x = container.animationX;
+  const y = container.y;
+  const w = 300;
+  const h = 500;
+
+  // Create graphics buffer
+  let imgBuffer = createGraphics(w + 40, h + 200);
+  imgBuffer.background(255);
+
+  // Capture animation directly from canvas
+  let animationImage = get(x, y, w, h); // Capture the animation region
+  imgBuffer.image(animationImage, 20, 20, w, h); // Place captured image
+
+  // Draw title
+  imgBuffer.fill(0);
+  imgBuffer.textSize(24);
+  imgBuffer.textAlign(CENTER, TOP);
+  imgBuffer.text(currentDishes[index], w / 2 + 20, h + 30);
+
+  // Draw nutrient info
+  let yOffset = h + 70;
+  let nutrientData = dishes[currentDishes[index]];
+  
+  for (let nutrient in nutrientData) {
+    imgBuffer.fill(0);
+    imgBuffer.textSize(14);
+    imgBuffer.textAlign(LEFT, TOP);
+    imgBuffer.text(`${nutrient}: ${nutrientData[nutrient].toFixed(1)}%`, 30, yOffset);
+
+    imgBuffer.fill(getColor(nutrient));
+    imgBuffer.rect(150, yOffset, map(nutrientData[nutrient], 0, 100, 0, 150), 10);
+
+    yOffset += 20;
+  }
+
+  // Save image correctly
+  let dishName = currentDishes[index].replace(/ /g, '_');
+  save(imgBuffer, `${dishName}_nutrition.png`);
 }
+
 
 
 function drawContainer(container, index) {
